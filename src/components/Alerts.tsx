@@ -30,10 +30,10 @@ export default function Alerts() {
   if (!alerts) return <div>Checking alerts...</div>
   if (alerts.length === 0) return <div>No alerts</div>
   return (
-    <div style={{ marginTop: 12 }}>
+    <div className="alerts-panel">
       <h3>Alerts</h3>
       <ul>
-        {alerts.map((a, i) => <li key={i} style={{ color: 'crimson' }}>{a}</li>)}
+        {alerts.map((a, i) => <li className="alert-item" key={i}>{a}</li>)}
       </ul>
     </div>
   )

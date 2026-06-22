@@ -13,23 +13,29 @@ export default function Charts() {
   if (!data) return <div>Loading charts...</div>
 
   return (
-    <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
-      <div style={{ flex: 1 }}>
+    <div className="charts-row">
+      <section className="chart-panel">
         <h3>Registrations (30d)</h3>
         <MiniBarChart data={data.registrations} />
-      </div>
-      <div style={{ width: 240 }}>
+      </section>
+
+      <section className="chart-panel">
         <h3>By Country</h3>
-        <ul>
-          {Object.entries(data.countries as Record<string, number>).map(([k, v]) => <li key={k}>{k}: {v as number}</li>)}
+        <ul className="chart-list">
+          {Object.entries(data.countries as Record<string, number>).map(([k, v]) => (
+            <li key={k}><span>{k}</span><strong>{v}</strong></li>
+          ))}
         </ul>
-      </div>
-      <div style={{ width: 240 }}>
+      </section>
+
+      <section className="chart-panel">
         <h3>By Subscription</h3>
-        <ul>
-          {Object.entries(data.bySub as Record<string, number>).map(([k, v]) => <li key={k}>{k}: {v as number}</li>)}
+        <ul className="chart-list">
+          {Object.entries(data.bySub as Record<string, number>).map(([k, v]) => (
+            <li key={k}><span>{k}</span><strong>{v}</strong></li>
+          ))}
         </ul>
-      </div>
+      </section>
     </div>
   )
 }
@@ -37,9 +43,19 @@ export default function Charts() {
 function MiniBarChart({ data }: { data: { date: string; count: number }[] }) {
   const max = Math.max(...data.map(d => d.count), 1)
   return (
-    <div style={{ display: 'flex', gap: 2, alignItems: 'end', height: 80 }}>
+    <div style={{ display: 'flex', gap: 4, alignItems: 'end', height: 112, paddingLeft: 4 }}>
       {data.map(d => (
-        <div key={d.date} title={`${d.date}: ${d.count}`} style={{ width: 6, height: `${(d.count / max) * 100}%`, background: '#3b82f6' }}></div>
+        <div
+          key={d.date}
+          title={`${d.date}: ${d.count}`}
+          style={{
+            flex: 1,
+            minWidth: 6,
+            height: `${(d.count / max) * 100}%`,
+            background: 'linear-gradient(180deg, #60a5fa, #1d4ed8)',
+            borderRadius: 999,
+          }}
+        />
       ))}
     </div>
   )

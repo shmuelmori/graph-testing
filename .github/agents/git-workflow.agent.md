@@ -48,6 +48,7 @@ agent stops and reports the failure for human intervention.
 - Strict order. Never start step N+1 before step N has succeeded.
 -- Run `git-task-summary` before making code changes, but do not expect an explicit
   interactive approval pause; the agent proceeds automatically to implementation.
+- Do not stop the flow for no reason. Continue to the next step automatically unless you encounter a specific case where you do not know what to do next.
 - Never run the review before implementation; never commit/push before the review
   passes.
 - Never commit to `main`/`master`.

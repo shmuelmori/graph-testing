@@ -5,20 +5,20 @@ export default function SummaryCards({ summary, loading }: { summary: Summary | 
   if (!summary) return <div>No summary available</div>
 
   return (
-    <div style={{ display: 'flex', gap: 12 }}>
-      <Card title="Total Users">{summary.totalUsers}</Card>
-      <Card title="Active Users">{summary.activeUsers}</Card>
-      <Card title="New Users (range)">{summary.newUsers30d}</Card>
-      <Card title="Avg Activity (min)">{summary.avgActivityMinutes}</Card>
+    <div className="summary-grid">
+      <Card title="Total Users" value={summary.totalUsers} />
+      <Card title="Active Users" value={summary.activeUsers} />
+      <Card title="New Users (30d)" value={summary.newUsers30d} />
+      <Card title="Avg Activity" value={`${summary.avgActivityMinutes} min`} />
     </div>
   )
 }
 
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
+function Card({ title, value }: { title: string; value: string | number }) {
   return (
-    <div style={{ padding: 12, border: '1px solid #ddd', borderRadius: 6, minWidth: 160 }}>
-      <div style={{ color: '#666', fontSize: 12 }}>{title}</div>
-      <div style={{ fontSize: 20, fontWeight: 600 }}>{children}</div>
+    <div className="card">
+      <div className="card-title">{title}</div>
+      <div className="card-value">{value}</div>
     </div>
   )
 }
