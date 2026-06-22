@@ -18,26 +18,40 @@ export default function Dashboard() {
   }, [range])
 
   return (
-    <div style={{ padding: 16 }}>
-      <h1>User Analytics Dashboard</h1>
-      <div style={{ marginBottom: 12 }}>
-        <label>Time Range: </label>
-        <select value={range} onChange={e => setRange(e.target.value as TimeRange)}>
-          <option value="7d">7d</option>
-          <option value="30d">30d</option>
-          <option value="90d">90d</option>
-          <option value="1y">1y</option>
-        </select>
-      </div>
+    <main className="dashboard-frame">
+      <header className="dashboard-header">
+        <div>
+          <h1>User Analytics Dashboard</h1>
+          <p className="dashboard-subtitle">A clear overview of user growth, activity, and retention in one place.</p>
+        </div>
+        <div className="dashboard-tools">
+          <label htmlFor="range-select">Time range</label>
+          <select
+            id="range-select"
+            value={range}
+            onChange={e => setRange(e.target.value as TimeRange)}
+          >
+            <option value="7d">7d</option>
+            <option value="30d">30d</option>
+            <option value="90d">90d</option>
+            <option value="1y">1y</option>
+          </select>
+        </div>
+      </header>
 
-      <SummaryCards summary={summary} loading={!summary} />
-      <Charts />
-      <Alerts />
+      <section className="dashboard-panel">
+        <SummaryCards summary={summary} loading={!summary} />
+        <Charts />
+        <Alerts />
+      </section>
 
-      <section style={{ marginTop: 24 }}>
-        <h2>Users</h2>
+      <section className="dashboard-panel" style={{ marginTop: 22 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 18 }}>
+          <h2>Users</h2>
+          <span className="metric-pill">Live user table</span>
+        </div>
         <UsersTable />
       </section>
-    </div>
+    </main>
   )
 }

@@ -12,65 +12,92 @@ export default function UsersTable() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLoading(true)
-    mockApi.fetchUsers({ q, page, pageSize }).then(r => {
+    let active = true
+
+    const loadUsers = async () => {
+      if (!active) return
+      setLoading(true)
+      const r = await mockApi.fetchUsers({ q, page, pageSize })
+      if (!active) return
       setItems(r.items as User[])
       setTotal(r.total)
       setLoading(false)
-    })
+    }
+
+    void loadUsers()
+    return () => { active = false }
   }, [q, page, pageSize])
 
   const [selected, setSelected] = useState<string | null>(null)
 
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-        <input placeholder="Search by name, email, id" value={q} onChange={e => setQ(e.target.value)} />
-        <label>Page size:</label>
-        <select value={pageSize} onChange={e => { setPageSize(Number(e.target.value)); setPage(1) }}>
+      <div className="controls">
+        <input
+          className="control-input"
+          placeholder="Search by name, email, id"
+          value={q}
+          onChange={e => setQ(e.target.value)}
+        />
+        <label htmlFor="page-size">Page size:</label>
+        <select
+          id="page-size"
+          className="control-select"
+          value={pageSize}
+          onChange={e => { setPageSize(Number(e.target.value)); setPage(1) }}
+        >
           <option value={10}>10</option>
           <option value={20}>20</option>
           <option value={50}>50</option>
         </select>
       </div>
 
-      {loading ? <div>Loading users...</div> : (
+      {loading ? (
+        <div className="loading-state">Loading users...</div>
+      ) : (
         <>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Country</th>
-                <th>Subscription</th>
-                <th>Status</th>
-                <th>Registered</th>
-                <th>Last Login</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map(u => (
-                <tr key={u.id} style={{ cursor: 'pointer' }} onClick={() => setSelected(u.id)}>
-                  <td>{u.id}</td>
-                  <td>{u.name}</td>
-                  <td>{u.email}</td>
-                  <td>{u.country}</td>
-                  <td>{u.subscription}</td>
-                  <td>{u.status}</td>
-                  <td>{new Date(u.registrationDate).toLocaleDateString()}</td>
-                  <td>{new Date(u.lastLogin).toLocaleDateString()}</td>
+          <div className="table-panel">
+            <table className="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Country</th>
+                  <th>Subscription</th>
+                  <th>Status</th>
+                  <th>Registered</th>
+                  <th>Last Login</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {items.map(u => (
+                  <tr
+                    key={u.id}
+                    className={selected === u.id ? 'selected' : ''}
+                    onClick={() => setSelected(u.id)}
+                  >
+                    <td>{u.id}</td>
+                    <td>{u.name}</td>
+                    <td>{u.email}</td>
+                    <td>{u.country}</td>
+                    <td>{u.subscription}</td>
+                    <td>
+                      <span className={`badge badge--${u.status}`}>{u.status}</span>
+                    </td>
+                    <td>{new Date(u.registrationDate).toLocaleDateString()}</td>
+                    <td>{new Date(u.lastLogin).toLocaleDateString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-          <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
-            <div>Showing {items.length} of {total}</div>
-            <div>
+          <div className="pagination">
+            <div className="pagination-meta">Showing {items.length} of {total}</div>
+            <div className="pagination-actions">
               <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Prev</button>
-              <span style={{ margin: '0 8px' }}>Page {page}</span>
+              <span>Page {page}</span>
               <button onClick={() => setPage(p => p + 1)} disabled={page * pageSize >= total}>Next</button>
             </div>
           </div>
